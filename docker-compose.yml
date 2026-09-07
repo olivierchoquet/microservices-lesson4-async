@@ -1,0 +1,10 @@
+# Demarre le broker et sa console web.
+#   docker compose up -d
+#   console : http://localhost:15672   (guest / guest)
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"     # AMQP, c'est ce port que les services Spring utilisent
+      - "15672:15672"   # console de management

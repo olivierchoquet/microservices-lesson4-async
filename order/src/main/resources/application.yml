@@ -1,0 +1,39 @@
+server:
+  port: 8083
+spring:
+  datasource:
+    url: jdbc:h2:mem:orderdb;MODE=LEGACY;DB_CLOSE_DELAY=-1
+    driverClassName: org.h2.Driver
+    username: sa
+    password: ''
+  jpa:
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+  h2:
+    console:
+      enabled: true
+
+  # +++ AJOUT : coordonnees du broker
+  rabbitmq:
+    host: localhost
+    port: 5672                  # port AMQP, pas 15672 qui est celui de la console web
+    username: guest
+    password: guest
+    listener:
+      simple:
+        # Sans ceci, un message qui echoue est remis en queue indefiniment
+        # et boucle a l'infini en saturant les logs.
+        default-requeue-rejected: false
+        retry:
+          enabled: true
+          max-attempts: 3
+
+external:
+  client-service: http://localhost:8082
+  # --- SUPPRIME : product-service: http://localhost:8081
+  # order-service ne connait plus l'adresse de product-service.
+  # C'est exactement cela, le decouplage.
